@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrated Login & Booking System</title>
+<style>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: blueviolet;
+background-size: cover;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+color: #fff;
+}
+.container {
+background-color: rgba(255, 255, 255, 0.9);
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+width: 400px;
+}
+h2 {
+text-align: center;
+color: #1e90ff;
+margin-bottom: 25px;
+font-size: 28px;
+}
+.form-group {
+margin-bottom: 20px;
+}
+.form-group label {
+display: block;
+margin-bottom: 8px;
+color: #333;
+font-weight: bold;
+font-size: 18px;
+}
+.form-group input, .form-group select, .form-group textarea {
+width: 100%;
+padding: 12px;
+border: 1px solid #ccc;
+border-radius: 6px;
+font-size: 16px;
+box-sizing: border-box;
+}
+.button {
+width: 100%;
+padding: 15px;
+background-color: #1e90ff;
+color: white;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+font-size: 18px;
+transition: background-color 0.3s ease;
+}
+.button:hover {
+background-color: #4682b4;
+}
+.toggle-link {
+display: block;
+text-align: center;
+margin-top: 15px;
+color: #1e90ff;
+text-decoration: none;
+cursor: pointer;
+font-size: 16px;
+}
+.toggle-link:hover {
+text-decoration: underline;
+}
+.nav-tabs {
+display: flex;
+background-color: #1e90ff;
+padding: 12px;
+margin-top: 20px;
+border-radius: 6px;
+}
+.nav-tabs button {
+flex: 1;
+background-color: #1e90ff;
+color: white;
+border: none;
+padding: 15px;
+cursor: pointer;
+text-align: center;
+font-size: 16px;
+transition: background-color 0.3s ease;
+}
+.nav-tabs button.active {
+background-color: #4682b4;
+}
+.tab-content {
+padding: 25px;
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 12px;
+display: none;
+color: #333;
+margin-top: 20px;
+}
+.tab-content.active {
+display: block;
+}
+.message {
+color: green;
+margin-top: 15px;
+display: none;
+font-size: 16px;
+}
+</style>
+</head>
+<body>
+<div id="login-register-container" class="container">
+<div id="login-form">
+<h2>Login</h2>
+<div class="form-group">
+<label for="login-email">Email</label>
+<input type="email" id="login-email" required>
+</div>
+<div class="form-group">
+<label for="login-password">Password</label>
+<input type="password" id="login-password" required>
+</div>
+<button class="button" onclick="showBooking()">Login</button>
+<a class="toggle-link" onclick="toggleForms()">Don't have an account? Register here</a>
+</div>
+<div id="register-form" style="display: none;">
+<h2>Register</h2>
+<div class="form-group">
+<label for="register-name">Name</label>
+<input type="text" id="register-name" required>
+</div>
+<div class="form-group">
+<label for="register-phone">Phone Number</label>
+<input type="tel" id="register-phone" required>
+</div>
+<div class="form-group">
+<label for="register-email">Email</label>
+<input type="email" id="register-email" required>
+</div>
+<div class="form-group">
+<label for="register-password">Password</label>
+<input type="password" id="register-password" required>
+</div>
+<button class="button" onclick="showBooking()">Register</button>
+<a class="toggle-link" onclick="toggleForms()">Already have an account? Login here</a>
+</div>
+</div>
+<div id="booking-container" class="container" style="display: none;">
+<div class="nav-tabs">
+<button class="tab-link active" onclick="showTab('book')">Book Ticket</button>
+<button class="tab-link" onclick="showTab('cancel')">Cancel Ticket</button>
+<button class="tab-link" onclick="showTab('status')">Search Status</button>
+<button class="tab-link" onclick="showTab('feedback')">Feedback</button>
+</div>
+<div id="book" class="tab-content active">
+<h2>Book a Ticket</h2>
+<div class="form-group">
+<label for="platform">Platform (Bus/Train/Flight)</label>
+<select id="platform">
+<option value="bus">Bus</option>
+<option value="train">Train</option>
+<option value="flight">Flight</option>
+</select>
+</div>
+<div class="form-group">
+<label for="destination">Destination</label>
+<input type="text" id="destination" placeholder="Enter your destination">
+</div>
+<div class="form-group">
+<label for="date">Travel Date</label>
+<input type="date" id="date">
+</div>
+<button class="button" onclick="bookTicket()">Book Now</button>
+<p id="booking-message" class="message">Your ticket has been booked!</p>
+</div>
+<div id="cancel" class="tab-content">
+<h2>Cancel a Ticket</h2>
+<div class="form-group">
+<label for="booking-id">Booking ID</label>
+<input type="text" id="booking-id" placeholder="Enter your booking ID">
+</div>
+<button class="button" onclick="cancelTicket()">Cancel Ticket</button>
+<p id="cancel-message" class="message">Your ticket has been canceled!</p>
+</div>
+<div id="status" class="tab-content">
+<h2>Search Reservation Status</h2>
+<div class="form-group">
+<label for="search-id">Reservation ID</label>
+<input type="text" id="search-id" placeholder="Enter your reservation ID">
+</div>
+<button class="button" onclick="checkStatus()">Search Status</button>
+<p id="status-message" class="message">Checking your reservation status...</p>
+</div>
+<div id="feedback" class="tab-content">
+<h2>Give Feedback</h2>
+<div class="form-group">
+<label for="feedback-text">Your Feedback</label>
+<textarea id="feedback-text" rows="4" placeholder="Write your feedback here"></textarea>
+</div>
+<button class="button" onclick="submitFeedback()">Submit Feedback</button>
+<p id="feedback-message" class="message">Thank you for your feedback!</p>
+</div>
+</div>
+<script>
+function toggleForms() {
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
+registerForm.style.display = registerForm.style.display === "none" ? "block" : "none";
+}
+function showBooking() {
+document.getElementById("login-register-container").style.display = "none";
+document.getElementById("booking-container").style.display = "block";
+}
+function showTab(tabId) {
+const tabs = document.querySelectorAll('.tab-content');
+const buttons = document.querySelectorAll('.tab-link');
+tabs.forEach(tab => tab.classList.remove('active'));
+buttons.forEach(button => button.classList.remove('active'));
+document.getElementById(tabId).classList.add('active');
+event.currentTarget.classList.add('active');
+}
+function bookTicket() {
+document.getElementById("booking-message").style.display = "block";
+}
+function cancelTicket() {
+document.getElementById("cancel-message").style.display = "block";
+}
+function checkStatus() {
+document.getElementById("status-message").style.display = "block";
+}
+function submitFeedback() {
+const feedbackText = document.getElementById("feedback-text").value.trim();
+if (feedbackText) {
+document.getElementById("feedback-message").style.display = "block";
+document.getElementById("feedback-text").value = "";
+} else {
+alert("Please write some feedback before submitting!");
+}
+}
+</script>
+</body>
+</html>
+
+
+
